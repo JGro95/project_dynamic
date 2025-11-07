@@ -69,8 +69,8 @@ Instead of a single chart, the project will present a **Dynamic Ensemble** — a
 | **Title** | *The Global Web of Borrowing and Lending* |
 | **Chart 1** | Global Financial Growth Overview |
 | **Chart 2** | Regional and Income-Group Comparison |
-| **Chart 3** | Global Network Heatmap or Chorddiagram |
-
+| **Chart 3** | Scatterplot for liabilities and claims |
+| **Chart 4** | Global Network Heatmap or Chorddiagram |
 
 ## Data Sources
 
