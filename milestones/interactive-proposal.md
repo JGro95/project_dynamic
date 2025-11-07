@@ -32,8 +32,9 @@ Instead of a single chart, the project will present a **Dynamic Ensemble** — a
 
 #### Network visualization: 
  - A Day in the Life of Americans, available: https://flowingdata.com/2015/12/15/a-day-in-the-life-of-americans/
- - https://www.data-to-viz.com/story/AdjacencyMatrix.html
- - https://dash.gallery/retail-demand-transference/?_gl=1*13q3d00*_gcl_au*ODQ5Mzk0MDg2LjE3NjA2NDU4OTI.*_ga*MTU1NDkxNDA2OS4xNzYwNjQ1ODkz*_ga_6G7EE0JNSC*czE3NjI1MzA1NTQkbzMkZzEkdDE3NjI1MzA2MzQkajYwJGwwJGgw
+ - Networks visualization examples: https://www.data-to-viz.com/story/AdjacencyMatrix.html
+ - Retail demand transference: https://dash.gallery/retail-demand-transference/?_gl=1*13q3d00*_gcl_au*ODQ5Mzk0MDg2LjE3NjA2NDU4OTI.*_ga*MTU1NDkxNDA2OS4xNzYwNjQ1ODkz*_ga_6G7EE0JNSC*czE3NjI1MzA1NTQkbzMkZzEkdDE3NjI1MzA2MzQkajYwJGwwJGgw
+ - Categories of coffee: https://coffee-flavours.plotly.app
  
 
 
@@ -45,39 +46,31 @@ Instead of a single chart, the project will present a **Dynamic Ensemble** — a
 
 1. **Global Financial Growth Overview**
    - Interactive line and area chart showing total claims, liabilities, and net positions since 2000.
-   - Dropdown to select specific regions (e.g., Americas, Europe, Asia) or country, instrument.
-
-2. **Regional and Income-Group Comparison**
-   - Interactive stacked area or bar chart showing exposures by income group.
+   - Dropdown to select specific regions (e.g., Americas, Europe, Asia) or country.
    - Slider or year-selection dropdown to view different periods (2000–2024).
 
-3. **Country-Level Balance Explorer (Scatter Plot)**
-   - Scatter plot of claims vs. liabilities as % of GDP, colored by region.
-   - Faceted by liability size bands.
-   - Checkbox or dropdown for highlighting specific countries (e.g., “Mexico,” “United States”).
-   - Beyond tooltip: uses dropdown and conditional highlighting.
+2. **Regional and Income-Group Comparison**
+   - Interactive stacked area or bar chart showing exposures by currency or type of instrument.
+   - Dropdown to select specific instruments and/or currency.
+
+
+3. **Scatterplot for liabilities and claims**
+   - Interactive scatterplot, comparing claims and liabilities. Clicking over the points will have the data.
+   - Dropdown to highlight specific countries.
 
 4. **Global Network Heatmap or Chorddiagram**
-   - Matrix (heatmap) of reporting countries vs. counterparties (regions or countries).
-   - Hover and tooltip to reveal claim values; potential dropdown to toggle between “Claims” and “Liabilities.”
+   - Matrix (heatmap) of countries countries providing funding and countries receiving funding. This could also be a chord diagram or a sankey diagram repeating the columns.
+   - Dropdown to select specific countries providing or receiving.
+   - When clicking over the wide, it should reveal the composition of instruments and currency.
 
 
-----------------------------------------------------------
-|  Title: "The Global Web of Borrowing and Lending"       |
-|  Intro paragraph explaining globalization of finance    |
-----------------------------------------------------------
-|  [ Chart 1: Global Claims and Liabilities Over Time ]   |
-|  Dropdown: [All / Region / Income Group]                |
-----------------------------------------------------------
-|  [ Chart 2: Exposures by Income Group ]                 |
-|  Slider: [← 2000  —  2024 →]                            |
-----------------------------------------------------------
-|  [ Chart 3: Claims vs. Liabilities (Scatter) ]          |
-|  Dropdown: [Highlight Country]                          |
-----------------------------------------------------------
-|  [ Chart 4: Heatmap of Global Lending Network ]         |
-|  Dropdown: [Claims / Liabilities]                       |
-----------------------------------------------------------
+| Section | Content |
+|----------|----------|
+| **Title** | *The Global Web of Borrowing and Lending* |
+| **Chart 1** | Global Financial Growth Overview |
+| **Chart 2** | Regional and Income-Group Comparison |
+| **Chart 3** | Global Network Heatmap or Chorddiagram |
+
 
 ## Data Sources
 
