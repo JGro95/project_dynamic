@@ -1,0 +1,367 @@
+<!DOCTYPE HTML>
+<!--
+	Cross-Border Finance Visualization
+	Based on "Strongly Typed" by HTML5 UP
+	html5up.net | @ajlkn
+    Acknowledgement: I used chatGPT for examples of how to handle dropdown menus, time sliders and embed vega and D3 outputs.
+-->
+<html>
+	<head>
+		<title>Interactive Dashboard - Cross-Border Finance</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+        <style>
+            /* Make the quarter slider larger and the track a neutral gray */
+            #c4-date-slider {
+                width: 100%;
+                height: 18px;
+                appearance: none;
+                background: transparent;
+            }
+            #c4-date-slider::-webkit-slider-runnable-track {
+                height: 6px;
+                background: #c7c7c7;
+                border-radius: 4px;
+            }
+            #c4-date-slider::-webkit-slider-thumb {
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #3a7bd5;
+                border: 1px solid #1f4b8f;
+                margin-top: -5px;
+            }
+            #c4-date-slider::-moz-range-track {
+                height: 6px;
+                background: #c7c7c7;
+                border-radius: 4px;
+            }
+            #c4-date-slider::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #3a7bd5;
+                border: 1px solid #1f4b8f;
+            }
+        </style>
+        
+
+	</head>
+
+	<body class="no-sidebar is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header: Cross-Border Finance Project -->
+				<section id="header">
+					<div class="container">
+
+						<!-- Logo / Project Title -->
+							<h1 id="logo"><a href="index.html">Cross-Border Finance</a></h1>
+							<p>Exploring global lending and borrowing patterns using BIS Locational Banking Statistics.</p>
+
+						<!-- Nav -->
+							<nav id="nav">
+								<ul>
+									<li><a class="icon solid fa-home" href="index.html"><span>Main</span></a></li>
+									<li>
+										<a href="#" class="icon fa-chart-bar"><span>Visualizations</span></a>
+										<ul>
+											<li><a href="#viz-global-growth">Global Growth</a></li>
+											<li><a href="#viz-region-income">Regions &amp; Income Groups</a></li>
+											<li><a href="#viz-network">Global Network</a></li>
+										</ul>
+									</li>
+									<li><a class="icon solid fa-sitemap" href="#footer"><span>References</span></a></li>
+								</ul>
+							</nav>
+
+					</div>
+				</section>
+
+			<!-- Main: Cross-Border Finance Visualizations -->
+				<section id="main">
+					<div class="container">
+						<div id="content">
+
+							<!-- Project Description + 4 Visualization Sections -->
+								<article class="box post">
+									<header>
+										<h2>The Global Network of Borrowing and Lending</h2>
+										<p>Interactive exploration of cross-border banking activity and financial linkages between countries.</p>
+									</header>
+
+									<!-- Intro / Narrative -->
+									<p>
+										This project uses the Bank for International Settlements’ Locational Banking Statistics (LBS)
+										to visualize how international claims and liabilities are distributed across countries. 
+                                        The goal is to make complex global finance data easier to explore by highlighting
+										trends, asymmetries, and interdependence in the international financial system.
+									</p>
+
+									<hr />
+
+									<!-- Visualization 1: Global Financial Growth Overview -->
+									<section id="viz-global-growth">
+										<header>
+											<h3>Global Financial Growth Overview</h3>
+											<p>
+												Time series of cross-border claims, liabilities, and net positions. Explore how global activity
+												evolves, and filter by region or country and time period.
+											</p>
+										</header>
+
+										<div class="row gtr-150">
+											<!-- Controls Subsection -->
+											<div class="col-4 col-12-medium">
+												<section class="box">
+													
+													<form>
+														<div class="row gtr-50">
+															<div class="col-12">
+																<label for="c1-region-select">Region / Country</label>
+																<select id="c1-region-select" name="c1-region-select">
+																</select>
+                                                                <script>
+                                                                    fetch("data/entity_options.json")
+                                                                    .then(r => r.json())
+                                                                    .then(options => {
+                                                                        const sel = document.getElementById("c1-region-select");
+                                                                        options.forEach(o => {
+                                                                        const opt = document.createElement("option");
+                                                                        opt.value = o.value;
+                                                                        opt.textContent = o.label;
+                                                                        sel.appendChild(opt);
+                                                                        });
+                                                                    });
+                                                                </script>
+															</div>
+														</div>
+													</form>
+												</section>
+											</div>
+
+											<!-- Plot Subsection -->
+											<div class="col-8 col-12-medium">
+												<section class="box">
+													<h4>Outstanding Cross-Border Claims, Liabilities, and Net Position</h4>
+													<p></p>
+													<div id="chart1" class="viz-plot">
+                                                    <!-- Chart 1 will be rendered here via JS (Altair / Vega-Embed) -->
+                                                    <script>
+                                                        vegaEmbed("#chart1", "charts/chart1_spec.json", { actions: false })
+                                                            .then(res => {
+                                                                const view = res.view;
+                                                                window.chart1_view = view;
+
+                                                                const select = document.getElementById("c1-region-select");
+
+                                                                // When the dropdown changes, push the selected value into the 'entity' signal
+                                                                select.addEventListener("change", (e) => {
+                                                                    const value = e.target.value || "world";
+                                                                    view.signal("entity", value).runAsync();
+                                                                });
+
+                                                                // Initialize the signal once, in case the select already has a value
+                                                                // (and if not, default 'world' in Altair still works)
+                                                                if (select && select.value) {
+                                                                    view.signal("entity", select.value).runAsync();
+                                                                }
+                                                            })
+                                                            .catch(console.error);
+                                                    </script>
+                                                </div>
+												</section>
+											</div>
+										</div>
+									</section>
+
+									<hr />
+
+									<!-- Visualization 2: Regional and Income-Group Comparison -->
+                                    <section id="viz-region-income">
+                                    <header>
+                                        <h3>Regional and Income-Group Comparison</h3>
+                                        <p>
+                                        Stacked bar chart of cross-border exposures by counterparty region.
+                                        Use the filters to focus on a specific region or income group.
+                                        </p>
+                                    </header>
+
+                                    <div class="row gtr-150">
+                                        <!-- Controls Subsection -->
+											<div class="col-4 col-12-medium">
+											<section class="box">
+												<form>
+												<div class="row gtr-50">
+													<div class="col-12">
+													<label for="c2-entity-select">Region / Country</label>
+													<select id="c2-entity-select" name="c2-entity-select">
+													</select>
+													</div>
+												</div>
+												</form>
+											</section>
+											</div>
+
+                                        <!-- Plot Subsection -->
+                                        <div class="col-8 col-12-medium">
+                                        <section class="box">
+                                            <h4>Exposures by Region and Income Group</h4>
+                                            <p></p>
+
+											<div id="chart2" class="viz-plot"></div>
+
+											<script>
+											// Populate dropdown and embed Chart 2
+											const c2EntitySelect = document.getElementById("c2-entity-select");
+
+											fetch("data/entity_options.json")
+												.then(r => r.json())
+												.then(options => {
+													c2EntitySelect.innerHTML = "";
+													options.forEach(o => {
+														const opt = document.createElement("option");
+														opt.value = o.value;
+														opt.textContent = o.label;
+														c2EntitySelect.appendChild(opt);
+													});
+													c2EntitySelect.value = "world";
+													return vegaEmbed("#chart2", "charts/chart2_spec.json", { actions: false });
+												})
+												.then(res => {
+													const view = res.view;
+
+													function updateFromEntity() {
+														const val = c2EntitySelect.value || "world";
+														view.signal("entity", val).runAsync();
+													}
+
+													c2EntitySelect.addEventListener("change", updateFromEntity);
+
+													// initialize once
+													if (c2EntitySelect.value) {
+														updateFromEntity();
+													}
+												})
+												.catch(console.error);
+											</script>
+										</section>
+										</div>
+									</div>
+									</section>
+                                    <hr />
+
+
+									<!-- Visualization 4: Global Network Heatmap / Chord Diagram -->
+									<section id="viz-network">
+										<header>
+											<h3>Global Lending Network</h3>
+											<p>
+												Network view (heatmap or chord diagram) of who lends to whom across borders. Identify financial
+												hubs, key borrowers, and the concentration of exposures in the system.
+											</p>
+										</header>
+
+										<div class="row gtr-150">
+											<!-- Controls Subsection -->
+											<div class="col-4 col-12-medium">
+												<section class="box">
+
+													<form>
+														<div class="row gtr-50">
+															<div class="col-12">
+																<label for="c4-mode-select">Mode</label>
+																<select id="c4-mode-select" name="c4-mode-select">
+																	<option value="region_region">Region to region</option>
+																	<option value="country_region">Country to region</option>
+																	<option value="country_country">Country to country</option>
+																</select>
+															</div>
+															<div class="col-12">
+																<label for="c4-date-slider">Year - Quarter</label>
+																<input type="range" id="c4-date-slider" min="0" max="0" value="0" step="1" />
+																<div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-top: 0.35em;">
+																	<span id="c4-date-start">...</span>
+																	<span id="c4-date-label">Loading...</span>
+																	<span id="c4-date-end">...</span>
+																</div>
+															</div>
+															<div class="col-12">
+																<label for="c4-country-select">Focus</label>
+																<select id="c4-country-select" name="c4-country-select">
+																	<option value="all">All countries</option>
+																</select>
+															</div>
+														</div>
+													</form>
+												</section>
+											</div>
+
+											<!-- Plot Subsection -->
+											<div class="col-8 col-12-medium">
+												<section class="box">
+													<h4>Borrowing & Lending Among Top Countries (trillion of USD)</h4>
+													<p>This area will display a D3 heatmap or chord diagram of cross-border claims.</p>
+													<div id="chart4-container" class="viz-plot">
+														<!-- Chart 4 will be rendered here via JS (D3) -->
+													</div>
+													<p style="font-size: 0.9em; margin-top: 0.75em;">
+														(Planned feature) Clicking on a cell or chord will reveal the breakdown by instrument and currency
+														for that lender–borrower pair.
+													</p>
+												</section>
+											</div>
+										</div>
+									</section>
+
+								</article>
+
+						</div>
+					</div>
+				</section>
+
+			<!-- Footer -->
+				<section id="footer">
+					<div class="container">
+						<header>
+							<h2>References</h2>
+						</header>
+						<section>
+							<p>Data source: Bank for International Settlements (BIS) – Locational Banking Statistics (LBS).</p>
+                            <p>HTML is a modified template from HTML5 UP</p>
+							<p>Affiliation: University of Chicago, Chicago, IL, USA.</p>
+							<p>Contact: <a href="jguerrero95@uchicago.edu">jguerrero95@uchicago.edu</a></p>
+						</section>
+					</div>
+					<div id="copyright" class="container">
+						<ul class="links">
+							<li>&copy; Cross-Border Finance Project. All rights reserved.</li><li>Design base: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+					</div>
+				</section>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+            
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+            <script src="js/chart4_chord.js"></script>
+
+
+
+	</body>
+</html>
+
+
+<!--  ["#1E3A8A", "#2A9D8F", "#268BD2", "#B58900", "#E76F51", "#B91C1C"] -->
