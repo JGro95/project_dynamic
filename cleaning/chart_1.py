@@ -6,7 +6,7 @@ from pathlib import Path
 # Acknowledgments: I used ChatGPT to ask for examples of using the HTML signal and how to export the Vega/Altair docs. 
 # Relative Paths setup
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR.parent / "www/data"
+DATA_DIR = BASE_DIR.parent / "docs/data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 CHARTS_DIR = DATA_DIR.parent / "charts"
 CHARTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -18,6 +18,7 @@ PCT_SPEC_FILE = CHARTS_DIR / "chart1_pct_change_spec.json"
 HHI_SPEC_FILE = CHARTS_DIR / "chart1_hhi_spec.json"
 
 EXPOSURES_JSON = DATA_DIR / "chart1_exposures.json"
+EXPOSURES_METADATA_JSON = DATA_DIR / "chart1_metadata.json"
 ENTITY_JSON = DATA_DIR / "entity_options.json"
 
 # Load raw data
@@ -88,12 +89,31 @@ cols_to_keep = [c for c in cols_to_keep if c in exposures_df.columns]
 
 chart1_df = exposures_df[cols_to_keep].copy()
 
+# OPTIMIZATION: Remove rows with zero OBS_VALUE to reduce file size
+chart1_df_nonzero = chart1_df[chart1_df["OBS_VALUE"] != 0].copy()
 
-# Save as JSON for Vega/Altair
+# Create metadata file with country info (only unique combinations)
+metadata_df = (
+    chart1_df_nonzero[["L_REP_CTY", "country_name_rep", "ISO_2_rep", "ISO_3_rep", "region_rep"]]
+    .drop_duplicates()
+    .reset_index(drop=True)
+)
+
+# Save metadata as JSON
+metadata_list = metadata_df.to_dict(orient='records')
+with open(EXPOSURES_METADATA_JSON, 'w') as f:
+    json.dump(metadata_list, f, indent=2)
+
+print(f"Saved metadata to {EXPOSURES_METADATA_JSON}")
+
+# Create slim data file with only essential columns
+slim_data_df = chart1_df_nonzero[["date", "L_POSITION", "OBS_VALUE", "L_REP_CTY", "L_CP_COUNTRY"]].copy()
+
+# Save slim data as JSON for Vega/Altair
 #    - orient='records' => list of {key: value} objects
 #    - date_format='iso' => ISO 8601 timestamps so Vega can parse them as dates
 # ------------------------------
-chart1_df.to_json(
+slim_data_df.to_json(
     EXPOSURES_JSON,
     orient="records",
     date_format="iso",
@@ -141,6 +161,11 @@ data_source = alt.Data(
     format={"type": "json"},
 )
 
+metadata_source = alt.Data(
+    url="data/chart1_metadata.json",
+    format={"type": "json"},
+)
+
 # Params (controlled from HTML/JS)
 entity_param = alt.param("entity", value="world")
 
@@ -155,6 +180,10 @@ hover = alt.selection_point(
 # Base chart 
 base = (
     alt.Chart(data_source)
+    .transform_lookup(
+        lookup="L_REP_CTY",
+        from_=alt.LookupData(data=metadata_source, key="L_REP_CTY", fields=["country_name_rep", "region_rep"]),
+    )
     .transform_filter(
         "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
     )
@@ -242,6 +271,10 @@ print(f"Saved chart spec to {SPEC_FILE}")
 # Quarter-over-quarter percent change for claims and liabilities
 pct_change_chart = (
     alt.Chart(data_source)
+    .transform_lookup(
+        lookup="L_REP_CTY",
+        from_=alt.LookupData(data=metadata_source, key="L_REP_CTY", fields=["country_name_rep", "region_rep"]),
+    )
     .transform_filter(
         "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
     )
@@ -295,6 +328,10 @@ print(f"Saved percent-change chart spec to {PCT_SPEC_FILE}")
 # HHI concentration index from borrower (liabilities) perspective
 hhi_chart = (
     alt.Chart(data_source)
+    .transform_lookup(
+        lookup="L_REP_CTY",
+        from_=alt.LookupData(data=metadata_source, key="L_REP_CTY", fields=["country_name_rep", "region_rep"]),
+    )
     .transform_filter(
         "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
     )
