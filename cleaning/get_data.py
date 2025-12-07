@@ -3,7 +3,6 @@ from pathlib import Path
 
 # Relative Paths setup
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR.parent / "www/data"
 
 RAW_CSV = BASE_DIR / "lbs_raw_claims_liabilities.csv"
 

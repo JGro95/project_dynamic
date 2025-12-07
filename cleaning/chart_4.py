@@ -4,7 +4,7 @@ import json
 
 #  Paths 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR.parent / "www" / "data"
+DATA_DIR = BASE_DIR.parent / "docs" / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 RAW_CSV = BASE_DIR / "lbs_raw_claims_liabilities.csv"

@@ -3,7 +3,7 @@ import altair as alt
 import json
 from pathlib import Path
 
-# Acknowledgments: I used ChatGPT to ask for examples of using the HTML signal and how to export the Vega/Altair docs. 
+# Acknowledgments: I used ChatGPT to ask for examples of using the HTML signal and how to export the Vega/Altair docs.
 # Relative Paths setup
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR.parent / "docs/data"
@@ -83,7 +83,7 @@ cols_to_keep = [
     "country_name_rep",
     "ISO_2_rep",
     "ISO_3_rep",
-    "region_rep"
+    "region_rep",
 ]
 cols_to_keep = [c for c in cols_to_keep if c in exposures_df.columns]
 
@@ -94,20 +94,24 @@ chart1_df_nonzero = chart1_df[chart1_df["OBS_VALUE"] != 0].copy()
 
 # Create metadata file with country info (only unique combinations)
 metadata_df = (
-    chart1_df_nonzero[["L_REP_CTY", "country_name_rep", "ISO_2_rep", "ISO_3_rep", "region_rep"]]
+    chart1_df_nonzero[
+        ["L_REP_CTY", "country_name_rep", "ISO_2_rep", "ISO_3_rep", "region_rep"]
+    ]
     .drop_duplicates()
     .reset_index(drop=True)
 )
 
 # Save metadata as JSON
-metadata_list = metadata_df.to_dict(orient='records')
-with open(EXPOSURES_METADATA_JSON, 'w') as f:
+metadata_list = metadata_df.to_dict(orient="records")
+with open(EXPOSURES_METADATA_JSON, "w") as f:
     json.dump(metadata_list, f, indent=2)
 
 print(f"Saved metadata to {EXPOSURES_METADATA_JSON}")
 
 # Create slim data file with only essential columns
-slim_data_df = chart1_df_nonzero[["date", "L_POSITION", "OBS_VALUE", "L_REP_CTY", "L_CP_COUNTRY"]].copy()
+slim_data_df = chart1_df_nonzero[
+    ["date", "L_POSITION", "OBS_VALUE", "L_REP_CTY", "L_CP_COUNTRY"]
+].copy()
 
 # Save slim data as JSON for Vega/Altair
 #    - orient='records' => list of {key: value} objects
@@ -123,29 +127,19 @@ print(f"Saved Chart 1 data to {EXPOSURES_JSON}")
 
 # Prepare list of unique entities for dropdown menu
 # Unique regions (drop NA)
-regions = (
-    chart1_df["region_rep"]
-    .dropna()
-    .drop_duplicates()
-    .sort_values()
-    .tolist()
-)
+regions = chart1_df["region_rep"].dropna().drop_duplicates().sort_values().tolist()
 
 # Unique countries (drop NA)
 countries = (
-    chart1_df["country_name_rep"]
-    .dropna()
-    .drop_duplicates()
-    .sort_values()
-    .tolist()
+    chart1_df["country_name_rep"].dropna().drop_duplicates().sort_values().tolist()
 )
 
 entities = ["world"] + regions + countries
 
 entity_options = (
-    [{"value": "world", "label": "World"}] +
-    [{"value": r, "label": r} for r in regions] +
-    [{"value": c, "label": c} for c in countries]
+    [{"value": "world", "label": "World"}]
+    + [{"value": r, "label": r} for r in regions]
+    + [{"value": c, "label": c} for c in countries]
 )
 
 
@@ -177,12 +171,16 @@ hover = alt.selection_point(
     empty="none",
 )
 
-# Base chart 
+# Base chart
 base = (
     alt.Chart(data_source)
     .transform_lookup(
         lookup="L_REP_CTY",
-        from_=alt.LookupData(data=metadata_source, key="L_REP_CTY", fields=["country_name_rep", "region_rep"]),
+        from_=alt.LookupData(
+            data=metadata_source,
+            key="L_REP_CTY",
+            fields=["country_name_rep", "region_rep"],
+        ),
     )
     .transform_filter(
         "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
@@ -206,15 +204,17 @@ base = (
         as_=["Position", "Value"],
     )
     .encode(
-        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y")),
-        y=alt.Y("Value:Q", title="Trillion USD"),
+        x=alt.X(
+            "yearmonth(date):T", title="", axis=alt.Axis(format="%Y", labelFontSize=14)
+        ),
+        y=alt.Y("Value:Q", title="Trillion USD", axis=alt.Axis(labelFontSize=14, titleFontSize=14)),
         color=alt.Color(
             "Position:N",
             scale=alt.Scale(
                 domain=["Claims", "Liabilities", "Net"],
                 range=["#2A9D8F", "#B91C1C", "#282D28"],
             ),
-            legend=alt.Legend(title="Position", orient="top"),
+            legend=alt.Legend(title="", orient="top", labelFontSize=15, symbolSize=250),
         ),
         tooltip=[
             alt.Tooltip("date:T", title="Date", format="%Y-%m"),
@@ -224,10 +224,9 @@ base = (
     )
 )
 
-# Bars for claims and liabilities 
+# Bars for claims and liabilities
 bars = (
-    base
-    .transform_filter("datum.Position != 'Net'")
+    base.transform_filter("datum.Position != 'Net'")
     .mark_bar()
     .encode(
         size=alt.condition(hover, alt.value(10), alt.value(8)),
@@ -236,16 +235,11 @@ bars = (
 )
 
 # Line for net position
-line = (
-    base
-    .transform_filter("datum.Position == 'Net'")
-    .mark_line(strokeWidth=3)
-)
+line = base.transform_filter("datum.Position == 'Net'").mark_line(strokeWidth=3)
 
 # Circles on the line that appear on hover
 points = (
-    base
-    .transform_filter("datum.Position == 'Net'")
+    base.transform_filter("datum.Position == 'Net'")
     .mark_circle(size=70)
     .encode(
         opacity=alt.condition(hover, alt.value(1), alt.value(0)),
@@ -258,7 +252,7 @@ chart = (
     .add_params(entity_param, hover)
     .properties(
         title="",
-        width=800,
+        width=1050,
         height=400,
     )
     .interactive()
@@ -273,7 +267,11 @@ pct_change_chart = (
     alt.Chart(data_source)
     .transform_lookup(
         lookup="L_REP_CTY",
-        from_=alt.LookupData(data=metadata_source, key="L_REP_CTY", fields=["country_name_rep", "region_rep"]),
+        from_=alt.LookupData(
+            data=metadata_source,
+            key="L_REP_CTY",
+            fields=["country_name_rep", "region_rep"],
+        ),
     )
     .transform_filter(
         "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
@@ -297,15 +295,15 @@ pct_change_chart = (
     .transform_filter("isValid(datum.pct_change)")
     .mark_line(point=True)
     .encode(
-        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y")),
-        y=alt.Y("pct_change:Q", title="Quarter-over-quarter change (%)"),
+        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y", labelFontSize=14)),
+        y=alt.Y("pct_change:Q", title="Quarter-over-quarter change (%)", axis=alt.Axis(labelFontSize=14, titleFontSize=14)),
         color=alt.Color(
             "Position:N",
             scale=alt.Scale(
                 domain=["Claims", "Liabilities"],
                 range=["#2A9D8F", "#B91C1C"],
             ),
-            legend=alt.Legend(title="Position", orient="top"),
+            legend=alt.Legend(title="", orient="top", labelFontSize=15, symbolSize=250),
         ),
         tooltip=[
             alt.Tooltip("date:T", title="Date", format="%Y-%m"),
@@ -314,8 +312,8 @@ pct_change_chart = (
         ],
     )
     .properties(
-        title="Quarter-over-quarter changes in cross-border positions",
-        width=800,
+        title="",
+        width=1050,
         height=300,
     )
     .add_params(entity_param)
@@ -330,7 +328,11 @@ hhi_chart = (
     alt.Chart(data_source)
     .transform_lookup(
         lookup="L_REP_CTY",
-        from_=alt.LookupData(data=metadata_source, key="L_REP_CTY", fields=["country_name_rep", "region_rep"]),
+        from_=alt.LookupData(
+            data=metadata_source,
+            key="L_REP_CTY",
+            fields=["country_name_rep", "region_rep"],
+        ),
     )
     .transform_filter(
         "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
@@ -360,8 +362,8 @@ hhi_chart = (
     )
     .mark_line(point=True)
     .encode(
-        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y")),
-        y=alt.Y("hhi_index:Q", title="HHI (0-10,000)"),
+        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y", labelFontSize=14)),
+        y=alt.Y("hhi_index:Q", title="HHI (0-10,000)", axis=alt.Axis(labelFontSize=14, titleFontSize=14)),
         color=alt.value("#2A2E34"),
         tooltip=[
             alt.Tooltip("date:T", title="Date", format="%Y-%m"),
@@ -369,9 +371,9 @@ hhi_chart = (
         ],
     )
     .properties(
-        title="Liability concentration across lenders (HHI)",
-        width=800,
-        height=300,
+        title="",
+        width=1050,
+        height=400,
     )
     .add_params(entity_param)
 )

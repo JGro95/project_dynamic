@@ -1,5 +1,6 @@
 # Cross-border Finance – Interactive Visualization
-
+### Jorge Guerrero
+ 
 This project builds an interactive web page to explore cross-border banking exposures using BIS Locational Banking Statistics (LBS).  
 The page is powered by:
 
