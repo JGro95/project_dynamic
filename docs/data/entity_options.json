@@ -1,0 +1,130 @@
+[
+  {
+    "value": "world",
+    "label": "World"
+  },
+  {
+    "value": "East Asia & Pacific",
+    "label": "East Asia & Pacific"
+  },
+  {
+    "value": "Europe & Central Asia",
+    "label": "Europe & Central Asia"
+  },
+  {
+    "value": "Latin America & Caribbean",
+    "label": "Latin America & Caribbean"
+  },
+  {
+    "value": "North America",
+    "label": "North America"
+  },
+  {
+    "value": "Sub-Saharan Africa",
+    "label": "Sub-Saharan Africa"
+  },
+  {
+    "value": "Australia",
+    "label": "Australia"
+  },
+  {
+    "value": "Austria",
+    "label": "Austria"
+  },
+  {
+    "value": "Belgium",
+    "label": "Belgium"
+  },
+  {
+    "value": "Brazil",
+    "label": "Brazil"
+  },
+  {
+    "value": "Canada",
+    "label": "Canada"
+  },
+  {
+    "value": "Chile",
+    "label": "Chile"
+  },
+  {
+    "value": "Denmark",
+    "label": "Denmark"
+  },
+  {
+    "value": "Finland",
+    "label": "Finland"
+  },
+  {
+    "value": "France",
+    "label": "France"
+  },
+  {
+    "value": "Germany",
+    "label": "Germany"
+  },
+  {
+    "value": "Greece",
+    "label": "Greece"
+  },
+  {
+    "value": "Hong Kong SAR, China",
+    "label": "Hong Kong SAR, China"
+  },
+  {
+    "value": "Ireland",
+    "label": "Ireland"
+  },
+  {
+    "value": "Italy",
+    "label": "Italy"
+  },
+  {
+    "value": "Japan",
+    "label": "Japan"
+  },
+  {
+    "value": "Luxembourg",
+    "label": "Luxembourg"
+  },
+  {
+    "value": "Macao SAR, China",
+    "label": "Macao SAR, China"
+  },
+  {
+    "value": "Mexico",
+    "label": "Mexico"
+  },
+  {
+    "value": "Netherlands",
+    "label": "Netherlands"
+  },
+  {
+    "value": "Philippines",
+    "label": "Philippines"
+  },
+  {
+    "value": "South Africa",
+    "label": "South Africa"
+  },
+  {
+    "value": "Spain",
+    "label": "Spain"
+  },
+  {
+    "value": "Sweden",
+    "label": "Sweden"
+  },
+  {
+    "value": "Switzerland",
+    "label": "Switzerland"
+  },
+  {
+    "value": "United Kingdom",
+    "label": "United Kingdom"
+  },
+  {
+    "value": "United States",
+    "label": "United States"
+  }
+]

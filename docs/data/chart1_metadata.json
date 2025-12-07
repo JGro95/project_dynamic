@@ -1,0 +1,184 @@
+[
+  {
+    "L_REP_CTY": "AT",
+    "country_name_rep": "Austria",
+    "ISO_2_rep": "AT",
+    "ISO_3_rep": "AUT",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "AU",
+    "country_name_rep": "Australia",
+    "ISO_2_rep": "AU",
+    "ISO_3_rep": "AUS",
+    "region_rep": "East Asia & Pacific"
+  },
+  {
+    "L_REP_CTY": "BE",
+    "country_name_rep": "Belgium",
+    "ISO_2_rep": "BE",
+    "ISO_3_rep": "BEL",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "BR",
+    "country_name_rep": "Brazil",
+    "ISO_2_rep": "BR",
+    "ISO_3_rep": "BRA",
+    "region_rep": "Latin America & Caribbean"
+  },
+  {
+    "L_REP_CTY": "CA",
+    "country_name_rep": "Canada",
+    "ISO_2_rep": "CA",
+    "ISO_3_rep": "CAN",
+    "region_rep": "North America"
+  },
+  {
+    "L_REP_CTY": "CH",
+    "country_name_rep": "Switzerland",
+    "ISO_2_rep": "CH",
+    "ISO_3_rep": "CHE",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "CL",
+    "country_name_rep": "Chile",
+    "ISO_2_rep": "CL",
+    "ISO_3_rep": "CHL",
+    "region_rep": "Latin America & Caribbean"
+  },
+  {
+    "L_REP_CTY": "DE",
+    "country_name_rep": "Germany",
+    "ISO_2_rep": "DE",
+    "ISO_3_rep": "DEU",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "DK",
+    "country_name_rep": "Denmark",
+    "ISO_2_rep": "DK",
+    "ISO_3_rep": "DNK",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "ES",
+    "country_name_rep": "Spain",
+    "ISO_2_rep": "ES",
+    "ISO_3_rep": "ESP",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "FI",
+    "country_name_rep": "Finland",
+    "ISO_2_rep": "FI",
+    "ISO_3_rep": "FIN",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "FR",
+    "country_name_rep": "France",
+    "ISO_2_rep": "FR",
+    "ISO_3_rep": "FRA",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "GB",
+    "country_name_rep": "United Kingdom",
+    "ISO_2_rep": "GB",
+    "ISO_3_rep": "GBR",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "GR",
+    "country_name_rep": "Greece",
+    "ISO_2_rep": "GR",
+    "ISO_3_rep": "GRC",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "HK",
+    "country_name_rep": "Hong Kong SAR, China",
+    "ISO_2_rep": "HK",
+    "ISO_3_rep": "HKG",
+    "region_rep": "East Asia & Pacific"
+  },
+  {
+    "L_REP_CTY": "IE",
+    "country_name_rep": "Ireland",
+    "ISO_2_rep": "IE",
+    "ISO_3_rep": "IRL",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "IT",
+    "country_name_rep": "Italy",
+    "ISO_2_rep": "IT",
+    "ISO_3_rep": "ITA",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "JP",
+    "country_name_rep": "Japan",
+    "ISO_2_rep": "JP",
+    "ISO_3_rep": "JPN",
+    "region_rep": "East Asia & Pacific"
+  },
+  {
+    "L_REP_CTY": "LU",
+    "country_name_rep": "Luxembourg",
+    "ISO_2_rep": "LU",
+    "ISO_3_rep": "LUX",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "MO",
+    "country_name_rep": "Macao SAR, China",
+    "ISO_2_rep": "MO",
+    "ISO_3_rep": "MAC",
+    "region_rep": "East Asia & Pacific"
+  },
+  {
+    "L_REP_CTY": "MX",
+    "country_name_rep": "Mexico",
+    "ISO_2_rep": "MX",
+    "ISO_3_rep": "MEX",
+    "region_rep": "Latin America & Caribbean"
+  },
+  {
+    "L_REP_CTY": "NL",
+    "country_name_rep": "Netherlands",
+    "ISO_2_rep": "NL",
+    "ISO_3_rep": "NLD",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "PH",
+    "country_name_rep": "Philippines",
+    "ISO_2_rep": "PH",
+    "ISO_3_rep": "PHL",
+    "region_rep": "East Asia & Pacific"
+  },
+  {
+    "L_REP_CTY": "SE",
+    "country_name_rep": "Sweden",
+    "ISO_2_rep": "SE",
+    "ISO_3_rep": "SWE",
+    "region_rep": "Europe & Central Asia"
+  },
+  {
+    "L_REP_CTY": "US",
+    "country_name_rep": "United States",
+    "ISO_2_rep": "US",
+    "ISO_3_rep": "USA",
+    "region_rep": "North America"
+  },
+  {
+    "L_REP_CTY": "ZA",
+    "country_name_rep": "South Africa",
+    "ISO_2_rep": "ZA",
+    "ISO_3_rep": "ZAF",
+    "region_rep": "Sub-Saharan Africa"
+  }
+]
