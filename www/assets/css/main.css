@@ -1909,7 +1909,7 @@ input, select, textarea {
 	}
 
 		#header > .container {
-			padding: 14em 0 7em 0;
+			padding: 8em 0 4em 0;
 			border-bottom: solid 2px #e5e5e5;
 			box-shadow: inset 0px -8px 0px 0px #fff, inset 0px -10px 0px 0px #e5e5e5;
 		}
@@ -2160,7 +2160,7 @@ input, select, textarea {
 		position: relative;
 		overflow: hidden;
 		background: #fff;
-		padding: 6em 0;
+		padding: 2em 0;
 	}
 
 /* Content */
@@ -2621,7 +2621,7 @@ input, select, textarea {
 			}
 
 			#header p {
-				margin: 1.25em 0 0 0;
+				margin: 1em 0 0 0;
 				letter-spacing: 2px;
 			}
 
@@ -2703,3 +2703,64 @@ input, select, textarea {
 				}
 
 	}
+
+#viz-network h4 {
+    text-align: center !important;
+}
+
+#viz-global-growth h4 {
+    text-align: center !important;
+}
+
+.c4-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+}
+
+#c4-date-slider {
+    flex: 1;
+    min-width: 0;
+    height: 18px;
+    appearance: none;
+    background: transparent;
+}
+
+#c4-date-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #c7c7c7;
+    border-radius: 4px;
+}
+
+#c4-date-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #3a7bd5;
+    border: 1px solid #1f4b8f;
+    margin-top: -5px;
+}
+
+#c4-date-slider::-moz-range-track {
+    height: 6px;
+    background: #c7c7c7;
+    border-radius: 4px;
+}
+
+#c4-date-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #3a7bd5;
+    border: 1px solid #1f4b8f;
+}
+
+#c4-date-play {
+    white-space: nowrap;
+}
+
+#c4-date-play:hover {
+    background: #7a7a7a;
+    color: #fff;
+}

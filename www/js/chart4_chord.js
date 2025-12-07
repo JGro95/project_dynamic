@@ -48,7 +48,7 @@ async function renderChordChart(
 
   const width = 600;
   const height = 600;
-  const innerRadius = Math.min(width, height) * 0.35;
+  const innerRadius = Math.min(width, height) * 0.28;
   const outerRadius = innerRadius + 10;
 
   const svg = container
@@ -147,7 +147,7 @@ async function renderChordChart(
       const value = d.source.value;
       const total = sourceTotals[d.source.index] || 0;
       const pct = total ? ((value / total) * 100).toFixed(1) : "0.0";
-      return `${from} → ${to}: ${formatTn(value.toLocaleString())} USD tn (${pct}% of ${from})`;
+      return `${from} → ${to}: ${formatTn(value.toLocaleString())} USD trillions \n (${pct}% of ${from})`;
     });
 }
 
@@ -159,6 +159,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateLabel = document.getElementById("c4-date-label");
   const dateStartLabel = document.getElementById("c4-date-start");
   const dateEndLabel = document.getElementById("c4-date-end");
+  const playButton = document.getElementById("c4-date-play");
+  let playTimer = null;
+
+  const formatQuarterLabel = dateStr => {
+    if (!dateStr) return "";
+    const [year, month] = dateStr.split("-");
+    const monthNum = Number(month);
+    if (!year || Number.isNaN(monthNum)) return dateStr;
+    const quarter = Math.floor((monthNum - 1) / 3) + 1;
+    return `${year}-Q${quarter}`;
+  };
+
+  function stopPlayback() {
+    if (playTimer) {
+      clearInterval(playTimer);
+      playTimer = null;
+    }
+    if (playButton) {
+      playButton.textContent = "Play";
+    }
+  }
+
+  function startPlayback() {
+    if (!dateSlider) return;
+    stopPlayback();
+    if (playButton) {
+      playButton.textContent = "Stop";
+    }
+    playTimer = setInterval(() => {
+      const max = Number(dateSlider.max);
+      let next = Number(dateSlider.value) + 1;
+      if (next > max) next = 0;
+      dateSlider.value = next;
+      updateChart();
+    }, 1200);
+  }
 
   function syncDateControls(modeData) {
     if (!dateSlider || !modeData?.dates?.length) return;
@@ -169,15 +205,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const idx = Number(dateSlider.value);
     const dateStr = modeData.dates[idx] || modeData.dates[modeData.dates.length - 1];
+    const formattedCurrent = formatQuarterLabel(dateStr) || dateStr || "";
+    const formattedStart = formatQuarterLabel(modeData.dates[0]) || modeData.dates[0] || "";
+    const formattedEnd =
+      formatQuarterLabel(modeData.dates[modeData.dates.length - 1]) ||
+      modeData.dates[modeData.dates.length - 1] ||
+      "";
     if (dateLabel) {
-      dateLabel.textContent = dateStr;
+      dateLabel.textContent = formattedCurrent;
     }
     if (dateStartLabel) {
-      dateStartLabel.textContent = modeData.dates[0] || "";
+      dateStartLabel.textContent = formattedStart;
     }
     if (dateEndLabel) {
-      dateEndLabel.textContent =
-        modeData.dates[modeData.dates.length - 1] || "";
+      dateEndLabel.textContent = formattedEnd;
     }
     return { index: idx, dateKey: dateStr };
   }
@@ -206,6 +247,13 @@ document.addEventListener("DOMContentLoaded", () => {
   countrySelect?.addEventListener("change", updateChart);
   focusSelect?.addEventListener("change", updateChart);
   dateSlider?.addEventListener("input", updateChart);
+  playButton?.addEventListener("click", () => {
+    if (playTimer) {
+      stopPlayback();
+    } else {
+      startPlayback();
+    }
+  });
 
   updateChart();
 });

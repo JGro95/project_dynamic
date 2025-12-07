@@ -20,7 +20,7 @@ def run_step(script_name: str) -> None:
 
 def main():
     """
-    Orchestrates the data download, cleaning, and chart-spec generation
+    Runs the files for data download, cleaning, and chart-spec generation
     for the interactive visualizations.
     """
     print("=== Starting BIS data pipeline ===")

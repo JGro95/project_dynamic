@@ -55,18 +55,43 @@ dates = sorted(df["date"].unique())
 date_keys = [pd.Timestamp(d).date().isoformat() for d in dates]
 print(f"Number of quarters: {len(date_keys)}")
 
-# PREPPARE DATA DEPENDING ON VIEW / MODE
 
-# Aggregate across all dates, by reporting country
-rep_totals = (
-    df.groupby("country_name_rep", observed=True)["amount"]
+# Subset of countries to focus (top N and Mexico)
+N_FOCUS = 15  # base number of top countries
+
+latest_date = df["date"].max()
+df_latest = df[df["date"] == latest_date]
+
+rep_totals_latest = (
+    df_latest.groupby("country_name_rep", observed=True)["amount"]
     .sum()
     .sort_values(ascending=False)
 )
 
-N_FOCUS = 20  # default number, later provided by interface
-focus_countries = rep_totals.head(N_FOCUS).index.tolist()
-print("Focus countries:", focus_countries)
+focus_countries = rep_totals_latest.head(N_FOCUS).index.tolist()
+
+# Make sure "Mexico" is included 
+if "Mexico" not in focus_countries:
+    focus_countries.append("Mexico")
+
+
+print("Number of focus countries:", len(focus_countries))  
+print("Top focus countries:", focus_countries)
+
+# Compute total global funding (latest quarter only)
+total_global = df_latest["amount"].sum()
+
+# Compute total funding for the selected focus countries (top N + Mexico)
+total_focus = (
+    df_latest[df_latest["country_name_rep"].isin(focus_countries)]["amount"].sum()
+)
+
+share = (total_focus / total_global * 100) if total_global > 0 else 0
+
+print(
+    f"Focus countries represent {share:,.2f}% of global cross-border claims in {latest_date.date()} "
+    f"({total_focus:,.2f} tn out of {total_global:,.2f} tn)."
+)
 
 # Helper: build matrix given node order and long-form edges 
 
@@ -92,6 +117,8 @@ def build_matrix(nodes, from_col, to_col, value_col, edges_df):
 
     return mat
 
+
+# PREPPARE DATA DEPENDING ON VIEW / MODE
 # OPTION 1: REGION to REGION 
 
 # All regions ever present
@@ -212,7 +239,7 @@ for d, d_key in zip(dates, date_keys):
 
 output = {
     "meta": {
-        "units": "USD billions",
+        "units": "USD trillions",
         "position": "Claims (reporting to counterparty)",
         "focus_countries": focus_countries,
     },

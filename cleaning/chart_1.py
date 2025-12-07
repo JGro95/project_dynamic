@@ -8,11 +8,14 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR.parent / "www/data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
+CHARTS_DIR = DATA_DIR.parent / "charts"
+CHARTS_DIR.mkdir(parents=True, exist_ok=True)
 
 RAW_CSV = BASE_DIR / "lbs_raw_claims_liabilities.csv"
 
-SPEC_FILE = DATA_DIR.parent / "charts/chart1_spec.json"
-SPEC_FILE.parent.mkdir(parents=True, exist_ok=True)
+SPEC_FILE = CHARTS_DIR / "chart1_spec.json"
+PCT_SPEC_FILE = CHARTS_DIR / "chart1_pct_change_spec.json"
+HHI_SPEC_FILE = CHARTS_DIR / "chart1_hhi_spec.json"
 
 EXPOSURES_JSON = DATA_DIR / "chart1_exposures.json"
 ENTITY_JSON = DATA_DIR / "entity_options.json"
@@ -192,7 +195,7 @@ base = (
     )
 )
 
-# Bars for claims and liabilities  (NO add_params here)
+# Bars for claims and liabilities 
 bars = (
     base
     .transform_filter("datum.Position != 'Net'")
@@ -234,3 +237,107 @@ chart = (
 
 chart.save(SPEC_FILE)
 print(f"Saved chart spec to {SPEC_FILE}")
+
+
+# Quarter-over-quarter percent change for claims and liabilities
+pct_change_chart = (
+    alt.Chart(data_source)
+    .transform_filter(
+        "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
+    )
+    .transform_aggregate(
+        total_obs="sum(OBS_VALUE)",
+        groupby=["date", "L_POSITION"],
+    )
+    .transform_window(
+        prev_total="lag(total_obs)",
+        sort=[{"field": "date"}],
+        groupby=["L_POSITION"],
+    )
+    .transform_calculate(
+        pct_change=(
+            "datum.prev_total ? "
+            "(datum.total_obs - datum.prev_total) / datum.prev_total * 100 : null"
+        ),
+        Position="datum.L_POSITION == 'C' ? 'Claims' : 'Liabilities'",
+    )
+    .transform_filter("isValid(datum.pct_change)")
+    .mark_line(point=True)
+    .encode(
+        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y")),
+        y=alt.Y("pct_change:Q", title="Quarter-over-quarter change (%)"),
+        color=alt.Color(
+            "Position:N",
+            scale=alt.Scale(
+                domain=["Claims", "Liabilities"],
+                range=["#2A9D8F", "#B91C1C"],
+            ),
+            legend=alt.Legend(title="Position", orient="top"),
+        ),
+        tooltip=[
+            alt.Tooltip("date:T", title="Date", format="%Y-%m"),
+            alt.Tooltip("Position:N", title="Position"),
+            alt.Tooltip("pct_change:Q", title="QoQ change (%)", format=",.1f"),
+        ],
+    )
+    .properties(
+        title="Quarter-over-quarter changes in cross-border positions",
+        width=800,
+        height=300,
+    )
+    .add_params(entity_param)
+)
+
+pct_change_chart.save(PCT_SPEC_FILE)
+print(f"Saved percent-change chart spec to {PCT_SPEC_FILE}")
+
+
+# HHI concentration index from borrower (liabilities) perspective
+hhi_chart = (
+    alt.Chart(data_source)
+    .transform_filter(
+        "entity == 'world' || datum.country_name_rep == entity || datum.region_rep == entity"
+    )
+    .transform_filter("datum.L_POSITION == 'L'")
+    .transform_aggregate(
+        liability_by_cp="sum(OBS_VALUE)",
+        groupby=["date", "L_CP_COUNTRY"],
+    )
+    .transform_joinaggregate(
+        total_liabilities="sum(liability_by_cp)",
+        groupby=["date"],
+    )
+    .transform_calculate(
+        share=(
+            "datum.total_liabilities > 0 ? "
+            "datum.liability_by_cp / datum.total_liabilities : 0"
+        ),
+        share_sq="datum.share * datum.share",
+    )
+    .transform_aggregate(
+        hhi="sum(share_sq)",
+        groupby=["date"],
+    )
+    .transform_calculate(
+        hhi_index="datum.hhi * 10000",
+    )
+    .mark_line(point=True)
+    .encode(
+        x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y")),
+        y=alt.Y("hhi_index:Q", title="HHI (0-10,000)"),
+        color=alt.value("#2A2E34"),
+        tooltip=[
+            alt.Tooltip("date:T", title="Date", format="%Y-%m"),
+            alt.Tooltip("hhi_index:Q", title="HHI", format=",.0f"),
+        ],
+    )
+    .properties(
+        title="Liability concentration across lenders (HHI)",
+        width=800,
+        height=300,
+    )
+    .add_params(entity_param)
+)
+
+hhi_chart.save(HHI_SPEC_FILE)
+print(f"Saved HHI chart spec to {HHI_SPEC_FILE}")
