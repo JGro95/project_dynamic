@@ -157,7 +157,7 @@
                                     The following three complementary views help characterize the dynamics of cross-border funding for specific geographies. <br>
                                         - Levels trace the evolution of claims, liabilities, and net positions over time, highlighting periods of expansion or retrenchment. <br>
                                         - Growth rates reveal turning points and shifts in momentum. <br>
-                                        - Concentration (by the HHI index) captures how exposures become more or less diversified, 
+                                        - Concentration, by the Herfindahl–Hirschman Index (HHI), captures how exposures become more or less diversified, 
                                           signaling potential vulnerabilities in the funding structure.
                                 </p>
                             </header>
@@ -196,7 +196,7 @@
                                         <h4>Outstanding Cross-Border Claims, Liabilities, and Net Position</h4>
                                         <p></p>
                                         <div id="chart1" class="viz-plot">
-                                            <!-- Chart 1 will be rendered here via JS (Altair / Vega-Embed) -->
+                                            <!-- Detailed/ apecific charts will be rendered here via JS (Altair / Vega-Embed) -->
                                             <script>
                                                 const chart1Setup = sharedEntityOptionsPromise
                                                     .then(() => vegaEmbed("#chart1", "charts/chart1_spec.json", { actions: false }))
@@ -242,7 +242,7 @@
                                 </div>
                                 <div class="col-12">
                                     <section class="box">
-                                        <h4>Liability concentration (HHI)</h4>
+                                        <h4>Liability concentration by the Herfindahl–Hirschman Index</h4>
                                         <div id="chart1-hhi" class="viz-plot"></div>
                                         <script>
                                             const chart1HhiSetup = sharedEntityOptionsPromise
@@ -280,8 +280,8 @@
                     <h2>References</h2>
                 </header>
                 <section>
-                    <p>Data source: Bank for International Settlements (BIS) – Locational Banking Statistics (LBS).</p>
-                    <p>HTML is a modified template from HTML5 UP</p>
+                    <p>Data source: <a href="https://data.bis.org/topics/LBS"> Bank for International Settlements (BIS) – Locational Banking Statistics (LBS).</a></p>
+                    <p>HTML is a modified template from <a href="https://html5up.net/">HTML5 UP</a></p>
                     <p>Affiliation: University of Chicago, Chicago, IL, USA.</p>
                     <p>Contact: <a href="jguerrero95@uchicago.edu">jguerrero95@uchicago.edu</a></p>
                 </section>
