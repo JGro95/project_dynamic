@@ -31,10 +31,7 @@ def main():
     # 2. Build data + spec for Chart 1 (Global Financial Growth Overview)
     run_step("chart_1.py")
 
-    # 3. Build data + spec for Chart 2 (Regional & Income-Group Comparison)
-    run_step("chart_2.py")
-
-    # 4. Build data for Chart 4 (Chord diagram / Global Network)
+    # 4. Build data for Chart Chord diagram
     run_step("chart_4.py")
 
     print("\n=== All cleaning and preprocessing steps completed successfully ✅ ===")
