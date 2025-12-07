@@ -364,7 +364,7 @@ hhi_chart = (
     .encode(
         x=alt.X("yearmonth(date):T", title="", axis=alt.Axis(format="%Y", labelFontSize=14)),
         y=alt.Y("hhi_index:Q", title="HHI (0-10,000)", axis=alt.Axis(labelFontSize=14, titleFontSize=14)),
-        color=alt.value("#2A2E34"),
+        color=alt.value("#1E3A8A"),
         tooltip=[
             alt.Tooltip("date:T", title="Date", format="%Y-%m"),
             alt.Tooltip("hhi_index:Q", title="HHI", format=",.0f"),
