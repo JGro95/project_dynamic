@@ -42,7 +42,14 @@ Data source: [Bank for International Settlements (BIS) – Locational Banking St
 HTML is a modified template from [HTML5 UP](https://html5up.net/)
 
 ## Run the project
-To run this project run `uv run main.py` and then `uvx livereload www/index.html`
+1. Clone the git repository
+    `git clone https://github.com/JGro95/project_dynamic.git`
+
+2. Run the following command to get and clean data, handle data and plot 
+    `uv run -m project_dynamic`
+
+3. To get a local preview, run inside docs folder of the repository
+    `uvx livereload`
 
 
 

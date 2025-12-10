@@ -34,8 +34,8 @@ def main():
     # 4. Build data for Chart Chord diagram
     run_step("chart_4.py")
 
-    print("\n=== All cleaning and preprocessing steps completed successfully ✅ ===")
-    print("Data JSON files are in `www/data/` and Vega/Altair specs in `www/charts/`.")
+    print("\n=== All cleaning and preprocessing steps completed successfully")
+    print("Data JSON files are in `docs/data/` and Vega/Altair specs in `docs/charts/`.")
 
 
 if __name__ == "__main__":
