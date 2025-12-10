@@ -2,7 +2,7 @@
 // Global chord data (for all modes & dates)
 let chordDataAll = null;
 
-// Load real data once
+// Pull full chord dataset and keep for later calls
 const chordDataPromise = d3
   .json("data/chart4_chord_all.json")
   .then(d => {
@@ -10,6 +10,7 @@ const chordDataPromise = d3
     return d;
   });
 
+// Populate the country dropdown with node names while preserving the previous selection
 function updateCountryOptions(selectEl, nodes) {
   if (!selectEl) return;
   const prev = selectEl.value || "all";
@@ -43,14 +44,17 @@ async function renderChordChart(
   mode = "region_region",
   dateKey = null
 ) {
+  // Reset the container so each render starts fresh
   const container = d3.select("#chart4-container");
-  container.selectAll("*").remove(); // clear previous chart
+  container.selectAll("*").remove(); 
 
+  // Layout constants
   const width = 600;
   const height = 600;
   const innerRadius = Math.min(width, height) * 0.28;
   const outerRadius = innerRadius + 10;
 
+  // SVG scaffold centered on the container
   const svg = container
     .append("svg")
     .attr("viewBox", `0 0 ${width} ${height}`)
@@ -58,12 +62,12 @@ async function renderChordChart(
     .append("g")
     .attr("transform", `translate(${width / 2},${height / 2})`);
 
-  // --- Load real data ---
+  // --- Load data ---
   const data = chordDataAll || (await chordDataPromise);
 
+  // Use the selected mode slice and fall back to the first available date
   const modeData = data.modes[mode];
 
-  // If no dateKey is provided, use first available date in that mode
   if (!dateKey) {
     dateKey = modeData.dates[0];
   }
@@ -75,6 +79,7 @@ async function renderChordChart(
 
 
   // --- Chord layout ---
+  // Build the chord, arc, ribbon generators
   const chord = d3.chordDirected()
     .padAngle(0.05)
     .sortSubgroups(d3.descending)(matrix);
@@ -92,6 +97,7 @@ async function renderChordChart(
     .range(d3.schemeTableau10);
 
 
+  // Outer arcs for each node (country/region) with optional highlight
   const group = svg.append("g")
     .attr("class", "groups")
     .selectAll("g")
@@ -112,6 +118,7 @@ async function renderChordChart(
       selectedIndex === null || d.index === selectedIndex ? 1 : 0.45
     );
 
+  // Text labels around the ring, rotated so they face outward
   group.append("text")
     .each(d => { d.angle = (d.startAngle + d.endAngle) / 2; })
     .attr("dy", "0.35em")
@@ -125,6 +132,7 @@ async function renderChordChart(
     .text(d => nodes[d.index]);
 
 
+  // Draw ribbons representing flows between nodes; dim non-selected ribbons
   svg.append("g")
     .attr("class", "ribbons")
     .selectAll("path")
@@ -152,6 +160,7 @@ async function renderChordChart(
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Cache elements
   const modeSelect = document.getElementById("c4-mode-select");
   const countrySelect = document.getElementById("c4-country-select");
   const focusSelect = document.getElementById("c4-focus-select");
@@ -162,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("c4-date-play");
   let playTimer = null;
 
+  // Helper to convert YYYY-MM to a friendlier quarter label
   const formatQuarterLabel = dateStr => {
     if (!dateStr) return "";
     const [year, month] = dateStr.split("-");
@@ -171,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${year}-Q${quarter}`;
   };
 
+  // --- Playback controls ---
   function stopPlayback() {
     if (playTimer) {
       clearInterval(playTimer);
@@ -196,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1200);
   }
 
+  // Keep slider bounds/labels in sync with selected mode dates
   function syncDateControls(modeData) {
     if (!dateSlider || !modeData?.dates?.length) return;
     dateSlider.min = 0;
@@ -223,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return { index: idx, dateKey: dateStr };
   }
 
+  // Pull current state and render the chord for that selection
   async function updateChart() {
     const mode = modeSelect ? modeSelect.value : "region_region";
     const focus = focusSelect ? focusSelect.value : "all";

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 # Acknowledgments: I used ChatGPT to ask for examples of using the HTML signal and how to export the Vega/Altair docs.
+
 # Relative Paths setup
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR.parent / "docs/data"
@@ -72,7 +73,7 @@ exposures_df["gdp_2024"] = (
 )
 
 
-# Keep only columns needed for Chart 1
+# Keep only columns needed for levels, pct change and HHI charts
 
 cols_to_keep = [
     "date",
@@ -89,10 +90,13 @@ cols_to_keep = [c for c in cols_to_keep if c in exposures_df.columns]
 
 chart1_df = exposures_df[cols_to_keep].copy()
 
-# OPTIMIZATION: Remove rows with zero OBS_VALUE to reduce file size
+# Acknowledgments: I used ChatGPT to ask for code to divide the database in 
+# two json files that could be pushed to github (size/memory).
+
+# a. Remove rows with zero OBS_VALUE to reduce file size
 chart1_df_nonzero = chart1_df[chart1_df["OBS_VALUE"] != 0].copy()
 
-# Create metadata file with country info (only unique combinations)
+# b. Create metadata file with country info (only unique combinations)
 metadata_df = (
     chart1_df_nonzero[
         ["L_REP_CTY", "country_name_rep", "ISO_2_rep", "ISO_3_rep", "region_rep"]
@@ -101,22 +105,20 @@ metadata_df = (
     .reset_index(drop=True)
 )
 
-# Save metadata as JSON
+# c. Save metadata as JSON
 metadata_list = metadata_df.to_dict(orient="records")
 with open(EXPOSURES_METADATA_JSON, "w") as f:
     json.dump(metadata_list, f, indent=2)
 
 print(f"Saved metadata to {EXPOSURES_METADATA_JSON}")
 
-# Create slim data file with only essential columns
+# d. Create slim data file with only essential columns
 slim_data_df = chart1_df_nonzero[
     ["date", "L_POSITION", "OBS_VALUE", "L_REP_CTY", "L_CP_COUNTRY"]
 ].copy()
 
-# Save slim data as JSON for Vega/Altair
-#    - orient='records' => list of {key: value} objects
-#    - date_format='iso' => ISO 8601 timestamps so Vega can parse them as dates
-# ------------------------------
+# e. Save slim data as JSON for Vega/Altair
+
 slim_data_df.to_json(
     EXPOSURES_JSON,
     orient="records",
@@ -149,7 +151,7 @@ with open(ENTITY_JSON, "w") as f:
 print("Saved entity options to:", ENTITY_JSON)
 
 
-# build_chart1.py
+# Chart: Levels data
 data_source = alt.Data(
     url="data/chart1_exposures.json",
     format={"type": "json"},
@@ -160,7 +162,7 @@ metadata_source = alt.Data(
     format={"type": "json"},
 )
 
-# Params (controlled from HTML/JS)
+# Params (controlled from HTML/JS) but add default initial values
 entity_param = alt.param("entity", value="world")
 
 # Hover selection
@@ -224,7 +226,7 @@ base = (
     )
 )
 
-# Bars for claims and liabilities
+# bars for claims and liabilities
 bars = (
     base.transform_filter("datum.Position != 'Net'")
     .mark_bar()
@@ -259,10 +261,10 @@ chart = (
 )
 
 chart.save(SPEC_FILE)
-print(f"Saved chart spec to {SPEC_FILE}")
+print(f"Saved levels chart spec to {SPEC_FILE}")
 
 
-# Quarter-over-quarter percent change for claims and liabilities
+# Chart: Quarter-over-quarter percent change for claims and liabilities
 pct_change_chart = (
     alt.Chart(data_source)
     .transform_lookup(
@@ -323,7 +325,7 @@ pct_change_chart.save(PCT_SPEC_FILE)
 print(f"Saved percent-change chart spec to {PCT_SPEC_FILE}")
 
 
-# HHI concentration index from borrower (liabilities) perspective
+# Chart: HHI concentration index from borrower (liabilities) perspective
 hhi_chart = (
     alt.Chart(data_source)
     .transform_lookup(

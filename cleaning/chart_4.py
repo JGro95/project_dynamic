@@ -57,8 +57,9 @@ print(f"Number of quarters: {len(date_keys)}")
 
 
 # Subset of countries to focus (top N and Mexico)
-N_FOCUS = 15  # base number of top countries
+# base number of top countries
 
+N_FOCUS = 15  
 latest_date = df["date"].max()
 df_latest = df[df["date"] == latest_date]
 
@@ -93,7 +94,7 @@ print(
     f"({total_focus:,.2f} tn out of {total_global:,.2f} tn)."
 )
 
-# Helper: build matrix given node order and long-form edges 
+# Helper function: build matrix given node order and long-form edges 
 
 def build_matrix(nodes, from_col, to_col, value_col, edges_df):
     """
